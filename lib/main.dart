@@ -1,10 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Required for SystemChrome
 import 'package:kenyan_game/views/landing_page.dart';
-import 'package:kenyan_game/views/roll_dice.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform
+  );
 
   // // Lock orientation to portrait mode
   // await SystemChrome.setPreferredOrientations([
