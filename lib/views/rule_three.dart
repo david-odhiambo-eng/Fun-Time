@@ -1,9 +1,14 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For playing sound effects
 import 'package:kenyan_game/views/rule_four.dart';
-import 'package:kenyan_game/views/rules_one.dart'; // Import your next page
+
+
+import '../ads_manager.dart'; // Import your next page
 
 class RulesPageThree extends StatefulWidget {
+  const RulesPageThree({super.key});
+
   @override
   _RulesPageState createState() => _RulesPageState();
 }
@@ -12,6 +17,7 @@ class _RulesPageState extends State<RulesPageThree>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -36,14 +42,19 @@ class _RulesPageState extends State<RulesPageThree>
   }
 
   void _playPopSoundAndNavigate() async {
-    // Play a pop sound
-    await SystemSound.play(SystemSoundType.click);
+    try {
+      // Play the audio file
+      _audioPlayer.play(AssetSource('audios/loud-pop-sound-effect.mp3'));
 
-    // Navigate to the next page
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RulesPageFour()),
-    );
+      // Navigate to the next page immediately
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const RulesPageFour()),
+      );
+    } catch (e) {
+      // Handle any errors, e.g., audio file not found
+      print("Error playing audio: $e");
+    }
   }
 
   @override
@@ -52,14 +63,14 @@ class _RulesPageState extends State<RulesPageThree>
       backgroundColor: Colors.orange,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(top:40),
+          padding: const EdgeInsets.only(top: 40),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // Title
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                   decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(20),
@@ -73,7 +84,7 @@ class _RulesPageState extends State<RulesPageThree>
                     ],
                   ),
                   child: const Text(
-                    'RULE 4',
+                    'RULE 3',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -82,15 +93,15 @@ class _RulesPageState extends State<RulesPageThree>
                     ),
                   ),
                 ),
-                SizedBox(height: 40,),
+                const SizedBox(height: 40,),
 
                 // Description with black background and animation
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: AnimatedContainer(
-                    duration: Duration(seconds: 2),
+                    duration: const Duration(seconds: 2),
                     curve: Curves.easeInOut,
-                    padding: EdgeInsets.all(40),
+                    padding: const EdgeInsets.all(40),
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(20),
@@ -99,7 +110,7 @@ class _RulesPageState extends State<RulesPageThree>
                           color: Colors.black.withOpacity(0.3),
                           spreadRadius: 2,
                           blurRadius: 10,
-                          offset: Offset(0, 4),
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
@@ -108,25 +119,24 @@ class _RulesPageState extends State<RulesPageThree>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '"Join Via Code"\n'
-                              '1. "This Option is explicitly for Teams that are NOT playing the game"\n'
-                              '2. "The player will provide a code"\n'
-                              '3. "This code enables you watch a long as the other team plays"\n'
-                              ,
+                          '"See Screen"\n'
+                              '1. "This Option is explicitly for Teams that are NOT playing the game(Opponents)"\n'
+                              '2. "The playing Team will provide a code"\n'
+                              '3. "This code enables you watch along on your phones as the other team plays"\n'
+                          ,
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 16,
+                            fontFamily: "SmoochSans-VariableFont_wght.ttf",
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
                       ],
                     ),
-
                   ),
                 ),
-                SizedBox(height: 20,),
-
+                const SizedBox(height: 20,),
 
                 // Emojis and Bottle
                 Column(
@@ -136,24 +146,24 @@ class _RulesPageState extends State<RulesPageThree>
                       children: [
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😜", style: TextStyle(fontSize: 40)),
+                          child: const Text("😜", style: TextStyle(fontSize: 40)),
                         ),
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😎", style: TextStyle(fontSize: 40)),
+                          child: const Text("😎", style: TextStyle(fontSize: 40)),
                         ),
                       ],
                     ),
                     Stack(
                       alignment: Alignment.center,
                       children: [
-                        Icon(Icons.smartphone, size: 120, color: Colors.black),
+                        const Icon(Icons.smartphone, size: 120, color: Colors.black),
                         Transform.rotate(
                           angle: 0.2,
                           child: const Icon(
-                            Icons.local_drink,
+                            Icons.casino,
                             size: 60,
-                            color: Colors.green,
+                            color: Colors.black,
                           ),
                         ),
                       ],
@@ -163,11 +173,11 @@ class _RulesPageState extends State<RulesPageThree>
                       children: [
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😍", style: TextStyle(fontSize: 40)),
+                          child: const Text("😍", style: TextStyle(fontSize: 40)),
                         ),
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😜", style: TextStyle(fontSize: 40)),
+                          child: const Text("😜", style: TextStyle(fontSize: 40)),
                         ),
                       ],
                     ),
@@ -178,21 +188,33 @@ class _RulesPageState extends State<RulesPageThree>
                 ElevatedButton(
                   onPressed: _playPopSoundAndNavigate,
                   style: ElevatedButton.styleFrom(
-                    shape: CircleBorder(),
-                    padding: EdgeInsets.all(20),
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(20),
                     backgroundColor: Colors.green,
                   ),
                   child: const Icon(
-                    Icons.play_arrow,
+                    Icons.arrow_forward,
                     size: 40,
                     color: Colors.white,
+                  ),
+                ),
+
+                // Add the Ad Section at the Bottom
+                const SizedBox(height: 30), // Space before the ad
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Container(
+                    height: 50, // Adjust based on your ad size
+                    width: double.infinity,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                    child: AdManager.getBannerAd(), // Display the banner ad
                   ),
                 ),
               ],
             ),
           ),
         ),
-
       ),
     );
   }

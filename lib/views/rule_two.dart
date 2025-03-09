@@ -1,9 +1,13 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For playing sound effects
-import 'package:kenyan_game/views/rule_three.dart';
-import 'package:kenyan_game/views/rules_one.dart'; // Import your next page
+import 'package:kenyan_game/views/tips.dart';
+
+import '../ads_manager.dart'; // Import your next page
 
 class RulesPageTwo extends StatefulWidget {
+  const RulesPageTwo({super.key});
+
   @override
   _RulesPageState createState() => _RulesPageState();
 }
@@ -12,6 +16,7 @@ class _RulesPageState extends State<RulesPageTwo>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -36,14 +41,19 @@ class _RulesPageState extends State<RulesPageTwo>
   }
 
   void _playPopSoundAndNavigate() async {
-    // Play a pop sound
-    await SystemSound.play(SystemSoundType.click);
+    try {
+      // Play the audio file
+      _audioPlayer.play(AssetSource('audios/loud-pop-sound-effect.mp3'));
 
-    // Navigate to the next page
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RulesPageThree()),
-    );
+      // Navigate to the next page immediately
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => TipsPage()),
+      );
+    } catch (e) {
+      // Handle any errors, e.g., audio file not found
+      print("Error playing audio: $e");
+    }
   }
 
   @override
@@ -52,14 +62,14 @@ class _RulesPageState extends State<RulesPageTwo>
       backgroundColor: Colors.orange,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(top:40),
+          padding: const EdgeInsets.only(top: 40),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // Title
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                   decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(20),
@@ -68,12 +78,12 @@ class _RulesPageState extends State<RulesPageTwo>
                         color: Colors.black.withOpacity(0.3),
                         spreadRadius: 2,
                         blurRadius: 8,
-                        offset: Offset(0, 4),
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
                   child: const Text(
-                    'RULE 3',
+                    'TIPS',
                     style: TextStyle(
                       fontSize: 28,
                       fontWeight: FontWeight.bold,
@@ -82,15 +92,15 @@ class _RulesPageState extends State<RulesPageTwo>
                     ),
                   ),
                 ),
-                SizedBox(height: 40,),
+                const SizedBox(height: 40,),
 
                 // Description with black background and animation
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: AnimatedContainer(
-                    duration: Duration(seconds: 2),
+                    duration: const Duration(seconds: 2),
                     curve: Curves.easeInOut,
-                    padding: EdgeInsets.all(40),
+                    padding: const EdgeInsets.all(40),
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(20),
@@ -99,7 +109,7 @@ class _RulesPageState extends State<RulesPageTwo>
                           color: Colors.black.withOpacity(0.3),
                           spreadRadius: 2,
                           blurRadius: 10,
-                          offset: Offset(0, 4),
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
@@ -108,53 +118,21 @@ class _RulesPageState extends State<RulesPageTwo>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          '"Resume Game With My Team"\n\n'
-                              '1. SELECT THIS OPTION IF YOU ARE IN YOUR SECOND GAME OR HIGHER',
+                          '" Team Members"\n\n'
+                              '1. EACH TEAM SHOULD HAVE A MINIMUM OF TWO & A MAXIMUM OF 4 MEMBERS',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 16,
+                            fontFamily: "SmoochSans-VariableFont_wght.ttf",
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
-
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 40,),
-
-                // Description with black background and animation
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: 20),
-                //   child: AnimatedContainer(
-                //     duration: Duration(seconds: 2),
-                //     curve: Curves.easeInOut,
-                //     padding: EdgeInsets.all(40),
-                //     decoration: BoxDecoration(
-                //       color: Colors.black,
-                //       borderRadius: BorderRadius.circular(20),
-                //       boxShadow: [
-                //         BoxShadow(
-                //           color: Colors.black.withOpacity(0.3),
-                //           spreadRadius: 2,
-                //           blurRadius: 10,
-                //           offset: Offset(0, 4),
-                //         ),
-                //       ],
-                //     ),
-                //     child: Text(
-                //       'If the game is played without adding names, the players must sit in a circle and rotate the bottle so that it points at them.',
-                //       textAlign: TextAlign.center,
-                //       style: TextStyle(
-                //         fontSize: 16,
-                //         color: Colors.white,
-                //         fontWeight: FontWeight.w400,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // SizedBox(height: 40,),
+                const SizedBox(height: 40,),
 
                 // Emojis and Bottle
                 Column(
@@ -164,24 +142,24 @@ class _RulesPageState extends State<RulesPageTwo>
                       children: [
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😜", style: TextStyle(fontSize: 40)),
+                          child: const Text("😜", style: TextStyle(fontSize: 40)),
                         ),
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😎", style: TextStyle(fontSize: 40)),
+                          child: const Text("😎", style: TextStyle(fontSize: 40)),
                         ),
                       ],
                     ),
                     Stack(
                       alignment: Alignment.center,
                       children: [
-                        Icon(Icons.smartphone, size: 120, color: Colors.black),
+                        const Icon(Icons.smartphone, size: 120, color: Colors.black),
                         Transform.rotate(
                           angle: 0.2,
-                          child: Icon(
-                            Icons.local_drink,
+                          child: const Icon(
+                            Icons.casino,
                             size: 60,
-                            color: Colors.green,
+                            color: Colors.black,
                           ),
                         ),
                       ],
@@ -191,11 +169,11 @@ class _RulesPageState extends State<RulesPageTwo>
                       children: [
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😍", style: TextStyle(fontSize: 40)),
+                          child: const Text("😍", style: TextStyle(fontSize: 40)),
                         ),
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😜", style: TextStyle(fontSize: 40)),
+                          child: const Text("😜", style: TextStyle(fontSize: 40)),
                         ),
                       ],
                     ),
@@ -206,21 +184,33 @@ class _RulesPageState extends State<RulesPageTwo>
                 ElevatedButton(
                   onPressed: _playPopSoundAndNavigate,
                   style: ElevatedButton.styleFrom(
-                    shape: CircleBorder(),
-                    padding: EdgeInsets.all(20),
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(20),
                     backgroundColor: Colors.green,
                   ),
-                  child: Icon(
-                    Icons.play_arrow,
+                  child: const Icon(
+                    Icons.arrow_forward,
                     size: 40,
                     color: Colors.white,
+                  ),
+                ),
+
+                // Add the Ad Section at the Bottom
+                const SizedBox(height: 30), // Space before the ad
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  child: Container(
+                    height: 50, // Adjust based on your ad size
+                    width: double.infinity,
+                    color: Colors.transparent,
+                    alignment: Alignment.center,
+                    //child: AdManager.getBannerAd(), // Display the banner ad
                   ),
                 ),
               ],
             ),
           ),
         ),
-
       ),
     );
   }

@@ -1,3 +1,13 @@
+buildscript {
+    repositories {
+        google()  // ✅ Add this to ensure dependencies like Google Services are found
+        mavenCentral()
+    }
+    dependencies {
+        classpath "com.google.gms:google-services:4.4.2" // ✅ Ensure this is present
+    }
+}
+
 allprojects {
     repositories {
         google()

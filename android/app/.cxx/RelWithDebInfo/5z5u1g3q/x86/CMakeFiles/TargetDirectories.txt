@@ -1,0 +1,2 @@
+C:/Users/HP/StudioProjects/kenyan_board_game/android/app/.cxx/RelWithDebInfo/5z5u1g3q/x86/CMakeFiles/edit_cache.dir
+C:/Users/HP/StudioProjects/kenyan_board_game/android/app/.cxx/RelWithDebInfo/5z5u1g3q/x86/CMakeFiles/rebuild_cache.dir

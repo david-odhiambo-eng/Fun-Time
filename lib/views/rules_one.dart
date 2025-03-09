@@ -1,9 +1,11 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // For playing sound effects
 import 'package:kenyan_game/views/rule_two.dart';
-import 'package:kenyan_game/views/rules_one.dart'; // Import your next page
 
 class RulesPageOne extends StatefulWidget {
+  const RulesPageOne({super.key});
+
   @override
   _RulesPageState createState() => _RulesPageState();
 }
@@ -12,6 +14,7 @@ class _RulesPageState extends State<RulesPageOne>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -36,14 +39,19 @@ class _RulesPageState extends State<RulesPageOne>
   }
 
   void _playPopSoundAndNavigate() async {
-    // Play a pop sound
-    await SystemSound.play(SystemSoundType.click);
+    try {
+      // Play the audio file
+      _audioPlayer.play(AssetSource('audios/loud-pop-sound-effect.mp3'));
 
-    // Navigate to the next page
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RulesPageTwo()),
-    );
+      // Navigate to the next page immediately
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => RulesPageTwo()),
+      );
+    } catch (e) {
+      // Handle any errors, e.g., audio file not found
+      print("Error playing audio: $e");
+    }
   }
 
   @override
@@ -52,14 +60,14 @@ class _RulesPageState extends State<RulesPageOne>
       backgroundColor: Colors.orange,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: EdgeInsets.only(top:40),
+          padding: const EdgeInsets.only(top: 40),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 // Title
                 Container(
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
                   decoration: BoxDecoration(
                     color: Colors.black,
                     borderRadius: BorderRadius.circular(20),
@@ -68,7 +76,7 @@ class _RulesPageState extends State<RulesPageOne>
                         color: Colors.black.withOpacity(0.3),
                         spreadRadius: 2,
                         blurRadius: 8,
-                        offset: Offset(0, 4),
+                        offset: const Offset(0, 4),
                       ),
                     ],
                   ),
@@ -82,15 +90,15 @@ class _RulesPageState extends State<RulesPageOne>
                     ),
                   ),
                 ),
-                SizedBox(height: 20,),
+                const SizedBox(height: 20),
 
                 // Description with black background and animation
                 Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   child: AnimatedContainer(
-                    duration: Duration(seconds: 2),
+                    duration: const Duration(seconds: 2),
                     curve: Curves.easeInOut,
-                    padding: EdgeInsets.all(40),
+                    padding: const EdgeInsets.all(40),
                     decoration: BoxDecoration(
                       color: Colors.black,
                       borderRadius: BorderRadius.circular(20),
@@ -99,7 +107,7 @@ class _RulesPageState extends State<RulesPageOne>
                           color: Colors.black.withOpacity(0.3),
                           spreadRadius: 2,
                           blurRadius: 10,
-                          offset: Offset(0, 4),
+                          offset: const Offset(0, 4),
                         ),
                       ],
                     ),
@@ -109,22 +117,21 @@ class _RulesPageState extends State<RulesPageOne>
                       children: [
                         Text(
                           '"Start Game With My Team"\n'
-                              '1. "Select this option when playing for the first game with your team"\n'
-                              '2. "Here, you will be provided with a code for sharing your screen"\n'
-                              '3. "Only share your screen with the opponent teams"\n'
-                              '4. "You MUST not share your screen with your team while playing"',
+                              '1. "Select this option when playing for the first game with your team"\n',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontSize: 16,
+                            fontFamily: "SmoochSans-VariableFont_wght.ttf",
                             color: Colors.white,
                             fontWeight: FontWeight.w400,
                           ),
                         ),
+
                       ],
                     ),
                   ),
                 ),
-                SizedBox(height: 10,),
+                const SizedBox(height: 10),
 
                 // Emojis and Bottle
                 Column(
@@ -134,24 +141,24 @@ class _RulesPageState extends State<RulesPageOne>
                       children: [
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😜", style: TextStyle(fontSize: 40)),
+                          child: const Text("😜", style: TextStyle(fontSize: 40)),
                         ),
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😎", style: TextStyle(fontSize: 40)),
+                          child: const Text("😎", style: TextStyle(fontSize: 40)),
                         ),
                       ],
                     ),
                     Stack(
                       alignment: Alignment.center,
                       children: [
-                        Icon(Icons.smartphone, size: 120, color: Colors.black),
+                        const Icon(Icons.smartphone, size: 120, color: Colors.black),
                         Transform.rotate(
                           angle: 0.2,
-                          child: Icon(
-                            Icons.local_drink,
+                          child: const Icon(
+                            Icons.casino,
                             size: 60,
-                            color: Colors.green,
+                            color: Colors.black,
                           ),
                         ),
                       ],
@@ -161,11 +168,11 @@ class _RulesPageState extends State<RulesPageOne>
                       children: [
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😍", style: TextStyle(fontSize: 40)),
+                          child: const Text("😍", style: TextStyle(fontSize: 40)),
                         ),
                         ScaleTransition(
                           scale: _scaleAnimation,
-                          child: Text("😜", style: TextStyle(fontSize: 40)),
+                          child: const Text("😜", style: TextStyle(fontSize: 40)),
                         ),
                       ],
                     ),
@@ -180,17 +187,29 @@ class _RulesPageState extends State<RulesPageOne>
                     padding: EdgeInsets.all(20),
                     backgroundColor: Colors.green,
                   ),
-                  child: Icon(
-                    Icons.play_arrow,
+                  child: const Icon(
+                    Icons.arrow_forward,
                     size: 40,
                     color: Colors.white,
                   ),
                 ),
+
+                // Ad Banner at the bottom
+                // SizedBox(height: 30), // Space before the ad
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 8),
+                //   child: Container(
+                //     height: 50, // Adjust based on your ad size
+                //     width: double.infinity,
+                //     color: Colors.transparent,
+                //     alignment: Alignment.center,
+                //     child: AdManager.getBannerAd(), // Display the banner ad
+                //   ),
+                // ),
               ],
             ),
           ),
         ),
-
       ),
     );
   }

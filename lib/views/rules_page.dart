@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // For playing sound effects
-import 'package:kenyan_game/views/rules_one.dart'; // Import your next page
+import 'package:audioplayers/audioplayers.dart'; // Import the audio players package
+import 'package:kenyan_game/views/rules_one.dart';
+
+import '../ads_manager.dart'; // Import your next page
 
 class RulesPage extends StatefulWidget {
+  const RulesPage({super.key});
+
   @override
   _RulesPageState createState() => _RulesPageState();
 }
@@ -11,6 +15,7 @@ class _RulesPageState extends State<RulesPage>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
+  final AudioPlayer _audioPlayer = AudioPlayer();
 
   @override
   void initState() {
@@ -31,167 +36,195 @@ class _RulesPageState extends State<RulesPage>
   @override
   void dispose() {
     _controller.dispose();
+    _audioPlayer.dispose();
     super.dispose();
   }
 
   void _playPopSoundAndNavigate() async {
-    // Play a pop sound
-    await SystemSound.play(SystemSoundType.click);
+    try {
+      // Play the audio file
+      _audioPlayer.play(AssetSource('audios/loud-pop-sound-effect.mp3'));
 
-    // Navigate to the next page
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => RulesPageOne()),
-    );
+      // Navigate to the next page immediately
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => RulesPageOne()),
+            (Route<dynamic> route) => false, // Removes all previous routes
+      );
+
+    } catch (e) {
+      // Handle any errors, e.g., audio file not found
+      print("Error playing audio: $e");
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.orange,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.only(top:40),
-          child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                // Title
-                Container(
-                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 30),
-                  decoration: BoxDecoration(
-                    color: Colors.black,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.3),
-                        spreadRadius: 2,
-                        blurRadius: 8,
-                        offset: Offset(0, 4),
+        child: Column( // Wraps everything to position the ad at the bottom
+          mainAxisAlignment: MainAxisAlignment.spaceBetween, // Pushes content up, ad down
+          children: [
+            Expanded( // Ensures content takes most of the space and remains scrollable
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.only(top: 40),
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      // Title
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 30),
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.3),
+                              spreadRadius: 2,
+                              blurRadius: 8,
+                              offset: Offset(0, 4),
+                            ),
+                          ],
+                        ),
+                        child: const Text(
+                          'RULE 1',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: 40),
+
+                      // Description Box
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: AnimatedContainer(
+                          duration: Duration(seconds: 2),
+                          curve: Curves.easeInOut,
+                          padding: EdgeInsets.all(40),
+                          decoration: BoxDecoration(
+                            color: Colors.black,
+                            borderRadius: BorderRadius.circular(20),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.3),
+                                spreadRadius: 2,
+                                blurRadius: 10,
+                                offset: Offset(0, 4),
+                              ),
+                            ],
+                          ),
+                          child: const Column(
+                            children: [
+                              Text(
+                                'N/B: You can’t play this game alone, you need a team.\n\n'
+                                    'There are 3 options of playing the game. You can:\n'
+                                    '1. "Start Game With My Team"\n'
+                                    '2. "See Screen"\n'
+                                    '3. "Record Points"\n',
+                                textAlign: TextAlign.left,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontFamily: "SmoochSans-VariableFont_wght.ttf",
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w400,
+                                ),
+                              ),
+
+                            ],
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 40),
+
+                      // Emojis and Bottle
+                      Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ScaleTransition(
+                                scale: _scaleAnimation,
+                                child: const Text("😜", style: TextStyle(fontSize: 40)),
+                              ),
+                              ScaleTransition(
+                                scale: _scaleAnimation,
+                                child: const Text("😎", style: TextStyle(fontSize: 40)),
+                              ),
+                            ],
+                          ),
+                          Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              const Icon(Icons.smartphone, size: 120, color: Colors.black),
+                              Transform.rotate(
+                                angle: 0.2,
+                                child: const Icon(
+                                  Icons.casino,
+                                  size: 60,
+                                  color: Colors.black,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ScaleTransition(
+                                scale: _scaleAnimation,
+                                child: const Text("😍", style: TextStyle(fontSize: 40)),
+                              ),
+                              ScaleTransition(
+                                scale: _scaleAnimation,
+                                child: const Text("😜", style: TextStyle(fontSize: 40)),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+
+                      // Play Button
+                      ElevatedButton(
+                        onPressed: _playPopSoundAndNavigate,
+                        style: ElevatedButton.styleFrom(
+                          shape: const CircleBorder(),
+                          padding: const EdgeInsets.all(20),
+                          backgroundColor: Colors.green,
+                        ),
+                        child: const Icon(
+                          Icons.arrow_forward,
+                          size: 40,
+                          color: Colors.white,
+                        ),
                       ),
                     ],
                   ),
-                  child: const Text(
-                    'RULE 1',
-                    style: TextStyle(
-                      fontSize: 28,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                      letterSpacing: 1.5,
-                    ),
-                  ),
                 ),
-                SizedBox(height: 40,),
-
-                // Description with black background and animation
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: AnimatedContainer(
-                    duration: Duration(seconds: 2),
-                    curve: Curves.easeInOut,
-                    padding: EdgeInsets.all(40),
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.3),
-                          spreadRadius: 2,
-                          blurRadius: 10,
-                          offset: Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: const Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'There are 4 options of playing the game. You can:\n'
-                              '1. "Start Game With My Team"\n'
-                              '2. "Resume Game With My Team"\n'
-                              '3. "Join Via Code"\n'
-                              '4. "Join To Record Points"',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.white,
-                            fontWeight: FontWeight.w400,
-                          ),
-                        ),
-                      ],
-                    ),
-
-                  ),
-                ),
-                SizedBox(height: 40,),
-
-                // Emojis and Bottle
-                Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ScaleTransition(
-                          scale: _scaleAnimation,
-                          child: Text("😜", style: TextStyle(fontSize: 40)),
-                        ),
-                        ScaleTransition(
-                          scale: _scaleAnimation,
-                          child: Text("😎", style: TextStyle(fontSize: 40)),
-                        ),
-                      ],
-                    ),
-                    Stack(
-                      alignment: Alignment.center,
-                      children: [
-                        Icon(Icons.smartphone, size: 120, color: Colors.black),
-                        Transform.rotate(
-                          angle: 0.2,
-                          child: Icon(
-                            Icons.local_drink,
-                            size: 60,
-                            color: Colors.green,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        ScaleTransition(
-                          scale: _scaleAnimation,
-                          child: Text("😍", style: TextStyle(fontSize: 40)),
-                        ),
-                        ScaleTransition(
-                          scale: _scaleAnimation,
-                          child: Text("😜", style: TextStyle(fontSize: 40)),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-
-                // Play Button
-                ElevatedButton(
-                  onPressed: _playPopSoundAndNavigate,
-                  style: ElevatedButton.styleFrom(
-                    shape: CircleBorder(),
-                    padding: EdgeInsets.all(20),
-                    backgroundColor: Colors.green,
-                  ),
-                  child: Icon(
-                    Icons.play_arrow,
-                    size: 40,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
 
+            // Banner Ad at the bottom
+            const SizedBox(height: 30), // Space before the ad
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Container(
+                height: 50, // Adjust based on your ad size
+                width: double.infinity,
+                color: Colors.transparent,
+                alignment: Alignment.center,
+                //child: AdManager.getBannerAd(), // Display the banner ad
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
+
 }
