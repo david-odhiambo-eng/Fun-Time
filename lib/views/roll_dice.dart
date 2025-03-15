@@ -268,7 +268,7 @@ class _RollDicePageState extends State<RollDicePage> with TickerProviderStateMix
                       child: RotationTransition(
                         turns: Tween(begin: 0.0, end: 1.0).animate(_diceController),
                         child: const Icon(
-                          Icons.casino, // Dice-like icon
+                          Icons.cyclone , // Dice-like icon
                           size: 150,
                           color: Colors.black,
                         ),
@@ -278,7 +278,7 @@ class _RollDicePageState extends State<RollDicePage> with TickerProviderStateMix
                   const SizedBox(height: 40),
                   // Instruction text
                   const Text(
-                    "Touch to Roll Dice",
+                    "Spin To Reveal Cards",
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 24,

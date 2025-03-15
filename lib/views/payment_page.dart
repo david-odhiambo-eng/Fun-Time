@@ -51,7 +51,7 @@ class _PaymentPageState extends State<PaymentPage> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: const Text(
-          'Go Premium',
+          'Pay Ksh.24. Disable ads for 24hrs',
           style: TextStyle(fontFamily: "SmoochSans-VariableFont_wght.ttf"),
         ),
         automaticallyImplyLeading: false,

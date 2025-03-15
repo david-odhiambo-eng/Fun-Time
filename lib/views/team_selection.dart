@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:audioplayers/audioplayers.dart'; // Import the AudioPlayers package
 import 'package:kenyan_game/ads_manager.dart';
 import 'package:kenyan_game/global.dart';
+import 'package:kenyan_game/views/payment_page.dart';
 import 'package:kenyan_game/views/roll_dice.dart';
 import '../progress.dart';
 import 'landing_page.dart';
@@ -22,16 +23,41 @@ class TeamSelectionPage extends StatelessWidget {
           elevation: 0,
           centerTitle: true,
           automaticallyImplyLeading: false,
-          title: const Text(
-            'Select Your Team',
-            style: TextStyle(
-              fontFamily: "Pacifico",
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+          toolbarHeight: 120, // Increase height of AppBar to push content down
+          title: Padding(
+            padding: const EdgeInsets.only(top: 20), // Adjust padding to move text down
+            child: Column(
+              children: [
+                const Text(
+                  'Select Your Team',
+                  style: TextStyle(
+                    fontFamily: "Pacifico",
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 12), // Increased spacing
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.monetization_on, color: Colors.green, size: 34),
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context)=>PaymentPage ()));
+                      },
+                    ),
+                    const SizedBox(width: 8), // Adjust spacing
+                    _BlinkingText(), // Blinking text
+                  ],
+                ),
+
+              ],
             ),
           ),
         ),
+
+
         body: SingleChildScrollView(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center, // Center vertically
@@ -157,3 +183,49 @@ class TeamSelectionPage extends StatelessWidget {
     );
   }
 }
+
+class _BlinkingText extends StatefulWidget {
+  @override
+  _BlinkingTextState createState() => _BlinkingTextState();
+}
+
+class _BlinkingTextState extends State<_BlinkingText> with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      duration: Duration(milliseconds: 700), // Speed of blinking
+      vsync: this,
+      lowerBound: 0.3,
+      upperBound: 1.0,
+    )..repeat(reverse: true);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Opacity(
+          opacity: _controller.value,
+          child: const Text(
+            "Disable ads",
+            style: TextStyle(
+              color: Colors.green,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+}
+
